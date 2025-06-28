@@ -3,6 +3,10 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import os
 from datetime import datetime
+from keep_alive import keep_alive
+
+# Start keep-alive web server
+keep_alive()
 
 # Load .env for token
 load_dotenv()
@@ -52,17 +56,32 @@ async def attack(ctx):
             await ctx.send("❌ Invalid format! Please use the format X/Y, for example: 123/456")
             return
 
-     # Ask only for arrival time
+        # Ask only for arrival time
         await ctx.send("Enter the arrival time (format HH:mm:ss):")
         time_msg = await bot.wait_for('message', check=check_author, timeout=60)
         arrival_time = time_msg.content.strip()
 
+        # Ask only for number of troops time
+        await ctx.send("Enter the minimum number of troops ( 0 for undefined ):")
+        numberOfTroops_msg = await bot.wait_for('message', check=check_author, timeout=60)
+        troops = numberOfTroops_msg.content.strip()
+
+        # Convert troops to int for comparison, but keep original string for display if needed
+        troops_int = int(troops)
+
+        # Build minimum troops line separately for clarity
+        if troops_int == 0:
+            min_troops_line = ":shield: Minimum troops: Not specified\n\n"
+        else:
+            min_troops_line = f":shield: Minimum troops: **{troops}**\n\n"
+
         # Build final message
         final_message = (
-            f"------------------------------------------\n"
-            f"🚨 **Incoming Attack!** 🚨\n\n"
+            "------------------------------------------\n"
+            "🚨 **Incoming Attack!** 🚨\n\n"
             f"Coordinates: **{x} | {y}**\n"
-            f"Arrival Time Before **{arrival_time}**\n\n"
+            f"Arrival Time Before **{arrival_time}**\n"
+            f"{min_troops_line}"
             f"⚔️ Please send reinforcements now! @everyone \n"
             f":arrow_forward: [Open Map](https://ts7.x1.international.travian.com/karte.php?x={x}&y={y})\n"
             f":arrow_forward: https://ts7.x1.international.travian.com/karte.php?x={x}&y={y}"
@@ -76,7 +95,6 @@ async def attack(ctx):
             permissions = channel.permissions_for(channel.guild.me)
             if not permissions.send_messages:
                 print(f"Bot lacks send_messages permission in channel {channel.name} ({channel.id})")
-
 
         # Send to all target channels
         for channel_id in TARGET_CHANNEL_IDS:

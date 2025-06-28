@@ -14,14 +14,12 @@ TOKEN = os.getenv('TOKEN')
 
 # === CONFIG ===
 TARGET_CHANNEL_IDS = [
-    1051075228844970016,  # Replace with your channel IDs
-    1385876632027533433,
-    1385876659869192293,
+    1388447502335868938,  # Replace with your channel IDs
 ]
 
 
 ALLOWED_ROLES = [
-    "admin",
+    "Subutaj",
 ]
 
 # === BOT SETUP ===
@@ -82,7 +80,7 @@ async def attack(ctx):
             f"Coordinates: **{x} | {y}**\n"
             f"Arrival Time Before **{arrival_time}**\n"
             f"{min_troops_line}"
-            f"⚔️ Please send reinforcements now! @everyone \n"
+            f"⚔️ Please send reinforcements now!\n"
             f":arrow_forward: [Open Map](https://ts7.x1.international.travian.com/karte.php?x={x}&y={y})\n"
             f":arrow_forward: https://ts7.x1.international.travian.com/karte.php?x={x}&y={y}"
         )
